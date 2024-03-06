@@ -194,7 +194,8 @@ void from_json(const nlohmann::json& json, std::unique_ptr<Action>& action) {
    CHECK_SILO_QUERY(json.contains("type"), "The field 'type' is required in any action")
    CHECK_SILO_QUERY(
       json["type"].is_string(),
-      "The field 'type' in all actions needs to be a string, but is: " + json["type"].dump()
+      "TEST THE CACHE The field 'type' in all actions needs to be a string, but is: " +
+         json["type"].dump()
    )
    const std::string expression_type = json["type"];
    if (expression_type == "Aggregated") {

@@ -1,0 +1,38 @@
+name: LAPIS-SILO Linter
+
+on:
+  push:
+
+concurrency:
+  group: ci-linter-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linter:
+    name: Build And Run linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build linter dependencies image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: linter_dependencies
+          tags: linter_dependencies
+          file: ./Dockerfile_linter
+          cache-from: type=gha,ref=linter-dependencies-image-cache-${{ hashFiles('conanfile.py', 'Dockerfile_linter') }}
+          cache-to: type=gha,mode=min,ref=linter-dependencies-image-cache-${{ hashFiles('conanfile.py', 'Dockerfile_linter') }}
+
+      - name: Build linter image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile_linter
+          target: linter
+          cache-from: type=gha,ref=${{ github.ref_name }}-linter-image-cache
+          cache-to: type=gha,mode=min,ref=${{ github.ref_name }}-linter-image-cache
+          push: false

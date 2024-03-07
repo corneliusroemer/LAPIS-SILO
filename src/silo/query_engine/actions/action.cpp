@@ -183,7 +183,7 @@ std::optional<uint32_t> parseRandomizeSeed(const nlohmann::json& json) {
    CHECK_SILO_QUERY(
       json["randomize"].is_object() && json["randomize"].contains("seed") &&
          json["randomize"]["seed"].is_number_unsigned(),
-      "If the action contains 'randomize', it must be either a boolean or an object "
+      "If the action contains TRY CACHING 'randomize', it must be either a boolean or an object "
       "containing an unsigned 'seed'"
    )
    return json["randomize"]["seed"].get<uint32_t>();

@@ -131,7 +131,7 @@ QueryResult FastaAligned::execute(
                aa_sequence_name, reconstructSequence<AminoAcid>(aa_store, sequence_id)
             );
          }
-         results.query_result.emplace_back(entry);
+         results.entriesMut().emplace_back(entry);
       }
    }
    return results;

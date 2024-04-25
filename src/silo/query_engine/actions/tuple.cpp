@@ -296,25 +296,6 @@ std::strong_ordering compareTupleFields(
    throw std::runtime_error("Unchecked column type of column " + metadata.name);
 }
 
-size_t getColumnSize(const silo::storage::ColumnMetadata& metadata) {
-   if (metadata.type == silo::config::ColumnType::STRING) {
-      return sizeof(silo::common::String<silo::common::STRING_SIZE>);
-   }
-   if (metadata.type == silo::config::ColumnType::FLOAT) {
-      return sizeof(double);
-   }
-   if (metadata.type == silo::config::ColumnType::BOOL) {
-      return sizeof(OptionalBool);
-   }
-   if (metadata.type == silo::config::ColumnType::INT) {
-      return sizeof(int32_t);
-   }
-   if (metadata.type == silo::config::ColumnType::DATE) {
-      return sizeof(silo::common::Date);
-   }
-   return sizeof(silo::Idx);
-}
-
 }  // namespace
 
 size_t silo::query_engine::actions::getTupleSize(

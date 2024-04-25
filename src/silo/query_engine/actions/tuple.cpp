@@ -305,7 +305,10 @@ size_t silo::query_engine::actions::getTupleSize(
    for (const auto& metadata : metadata_list) {
       size += getColumnSize(metadata);
    }
-   return size;
+   size_t largest_data_member = getColumnSize(metadata_list.front());
+   size_t rounded_up_to_next_multiple =
+      ((size - 1 + largest_data_member) / largest_data_member) * largest_data_member;
+   return rounded_up_to_next_multiple;
 }
 
 Tuple::Tuple(const silo::storage::ColumnPartitionGroup* columns, std::byte* data, size_t data_size)

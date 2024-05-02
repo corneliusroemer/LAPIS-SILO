@@ -11,30 +11,33 @@ namespace silo::query_engine {
 void QueryResult::clear() {
    query_result_chunk_.clear();
    get_chunk_ = [](std::vector<QueryResultEntry>& /*query_result_chunk*/) {};
-   iter_ = query_result_chunk_.begin();
+   i_ = 0;
 }
 
 std::optional<std::reference_wrapper<const QueryResultEntry>> QueryResult::next() {
+   auto siz = query_result_chunk_.size();
    SPDLOG_DEBUG(
-      "DEBUG: next called, is_materialized_ = {}, chunk len = {}",
+      "DEBUG: next called, i = {}, is_materialized_ = {}, chunk size() = {}",
+      i_,
       is_materialized_,
-      query_result_chunk_.size()
+      siz
    );
-   if (iter_ == query_result_chunk_.end()) {
+   // XX overflow, what is max .size() ??
+   if (i_ >= siz) {
       SPDLOG_DEBUG("DEBUG: reached the end");
       query_result_chunk_.clear();
       SPDLOG_DEBUG("DEBUG: cleared vector");
       get_chunk_(query_result_chunk_);
-      SPDLOG_DEBUG("DEBUG: returned from get_chunk_");
-      iter_ = query_result_chunk_.begin();
-      SPDLOG_DEBUG("DEBUG: set iterator to begin");
-      if (query_result_chunk_.empty()) {
+      i_ = 0;
+      siz = query_result_chunk_.size();
+      SPDLOG_DEBUG("DEBUG: returned from get_chunk_, chunk size() = {}", siz);
+      if (siz == 0) {
          SPDLOG_DEBUG("DEBUG: returning {} from next");
          return {};
       }
    }
-   const QueryResultEntry& ref = *iter_;
-   ++iter_;
+   const QueryResultEntry& ref = query_result_chunk_[i_];
+   ++i_;
    SPDLOG_DEBUG("DEBUG: returning ref from next");
    return {std::cref(ref)};
 }

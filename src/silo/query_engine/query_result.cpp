@@ -44,8 +44,8 @@ std::optional<std::reference_wrapper<const QueryResultEntry>> QueryResult::next(
 
 std::vector<QueryResultEntry>& QueryResult::entriesMut() {
    if (!is_materialized_) {
-      std::cerr << "can't give access to entries vector for a QueryResult that is streamed"
-                << std::endl;
+      std::cerr << "can't give access to entries vector for a QueryResult that is streamed\n"
+                << std::flush;
       abort();
    }
    return query_result_chunk_;

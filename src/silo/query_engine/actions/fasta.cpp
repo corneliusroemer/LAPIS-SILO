@@ -223,15 +223,6 @@ QueryResult Fasta::execute(const Database& database, std::vector<OperatorResult>
       )
    }
 
-   size_t total_count = 0;
-   for (auto& filter : bitmap_filter) {
-      total_count += filter->cardinality();
-   }
-   CHECK_SILO_QUERY(
-      total_count <= SEQUENCE_LIMIT,
-      fmt::format("Fasta action currently limited to {} sequences", SEQUENCE_LIMIT)
-   );
-
    // XX results.reserve(total_count);
    uint32_t partition_index = 0;
    return QueryResult{

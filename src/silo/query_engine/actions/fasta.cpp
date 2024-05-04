@@ -223,7 +223,6 @@ QueryResult Fasta::execute(const Database& database, std::vector<OperatorResult>
       )
    }
 
-   // XX results.reserve(total_count);
    uint32_t partition_index = 0;
    return QueryResult{
       [bitmap_filter = std::make_shared<std::vector<OperatorResult>>(std::move(bitmap_filter)),

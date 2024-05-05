@@ -19,7 +19,6 @@ std::optional<std::reference_wrapper<const QueryResultEntry>> QueryResult::next(
    SPDLOG_DEBUG(
       "next called, i = {}, is_materialized_ = {}, chunk size() = {}", i_, is_materialized_, siz
    );
-   sleep(1);
    // XX overflow, what is max .size() ??
    if (i_ >= siz) {
       SPDLOG_DEBUG("reached the end");

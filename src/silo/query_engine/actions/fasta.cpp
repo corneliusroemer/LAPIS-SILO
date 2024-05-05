@@ -230,7 +230,7 @@ QueryResult Fasta::execute(const Database& database, std::vector<OperatorResult>
        partition_index,
        sequence_names = sequence_names](std::vector<QueryResultEntry>& results) mutable {
          SPDLOG_DEBUG(
-            "DEBUG: fasta closure for partition_index {}/{}",
+            "fasta closure for partition_index {}/{}",
             partition_index,
             database.partitions.size()
          );

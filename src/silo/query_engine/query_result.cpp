@@ -17,28 +17,25 @@ void QueryResult::clear() {
 std::optional<std::reference_wrapper<const QueryResultEntry>> QueryResult::next() {
    auto siz = query_result_chunk_.size();
    SPDLOG_DEBUG(
-      "DEBUG: next called, i = {}, is_materialized_ = {}, chunk size() = {}",
-      i_,
-      is_materialized_,
-      siz
+      "next called, i = {}, is_materialized_ = {}, chunk size() = {}", i_, is_materialized_, siz
    );
    // XX overflow, what is max .size() ??
    if (i_ >= siz) {
-      SPDLOG_DEBUG("DEBUG: reached the end");
+      SPDLOG_DEBUG("reached the end");
       query_result_chunk_.clear();
-      SPDLOG_DEBUG("DEBUG: cleared vector");
+      SPDLOG_DEBUG("cleared vector");
       get_chunk_(query_result_chunk_);
       i_ = 0;
       siz = query_result_chunk_.size();
-      SPDLOG_DEBUG("DEBUG: returned from get_chunk_, chunk size() = {}", siz);
+      SPDLOG_DEBUG("returned from get_chunk_, chunk size() = {}", siz);
       if (siz == 0) {
-         SPDLOG_DEBUG("DEBUG: returning {} from next");
+         SPDLOG_DEBUG("returning {} from next");
          return {};
       }
    }
    const QueryResultEntry& ref = query_result_chunk_[i_];
    ++i_;
-   SPDLOG_DEBUG("DEBUG: returning ref from next");
+   SPDLOG_DEBUG("returning ref from next");
    return {std::cref(ref)};
 }
 

@@ -224,31 +224,28 @@ QueryResult Fasta::execute(const Database& database, std::vector<OperatorResult>
    }
 
    uint32_t partition_index = 0;
-   return QueryResult{
-      [bitmap_filter = std::make_shared<std::vector<OperatorResult>>(std::move(bitmap_filter)),
-       &database,
-       partition_index,
-       sequence_names = sequence_names](std::vector<QueryResultEntry>& results) mutable {
+   return QueryResult{[bitmap_filter =
+                          std::make_shared<std::vector<OperatorResult>>(std::move(bitmap_filter)),
+                       &database,
+                       partition_index,
+                       sequence_names =
+                          sequence_names](std::vector<QueryResultEntry>& results) mutable {
+      while (partition_index < database.partitions.size()) {
          SPDLOG_DEBUG(
-            "fasta closure for partition_index {}/{}",
-            partition_index,
-            database.partitions.size()
+            "fasta closure for partition_index {}/{}", partition_index, database.partitions.size()
          );
-
-         while (partition_index < database.partitions.size()) {
-            const auto& database_partition = database.partitions[partition_index];
-            const auto& bitmap = (*bitmap_filter)[partition_index];
-            const std::string& primary_key_column = database.database_config.schema.primary_key;
-            addSequencesToResultsForPartition(
-               sequence_names, results, database_partition, bitmap, primary_key_column
-            );
-            ++partition_index;
-            if (!results.empty()) {
-               return;
-            }
+         const auto& database_partition = database.partitions[partition_index];
+         const auto& bitmap = (*bitmap_filter)[partition_index];
+         const std::string& primary_key_column = database.database_config.schema.primary_key;
+         addSequencesToResultsForPartition(
+            sequence_names, results, database_partition, bitmap, primary_key_column
+         );
+         ++partition_index;
+         if (!results.empty()) {
+            return;
          }
       }
-   };
+   }};
 }
 
 // NOLINTNEXTLINE(readability-identifier-naming)

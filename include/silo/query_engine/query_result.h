@@ -31,7 +31,7 @@ class QueryResult {
    size_t i_;
    // Used for safety checks when asking to get all values via
    // `entries` or `entriesMut`.
-   const bool is_materialized_;
+   bool is_materialized_;
 
   public:
    /// For eager query evaluation.
@@ -61,6 +61,7 @@ class QueryResult {
       query_result_chunk_ = std::move(other.query_result_chunk_);
       get_chunk_ = std::move(other.get_chunk_);
       i_ = other.i_;
+      is_materialized_ = other.is_materialized_;
       // No marker needed since all fields have one themselves.
       return *this;
    }
